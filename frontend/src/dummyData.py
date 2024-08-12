@@ -42,7 +42,37 @@ mp = {
       "width": 390,
       "height": 454,
       "confidence": 0.949,
-      "class": "Phone",
+      "class": "Maggie",
+      "class_id": 0,
+      "detection_id": "bf52eb0c-9aa3-459d-9460-e59ffcc7c3c6"
+    },
+    {
+      "x": 337,
+      "y": 302,
+      "width": 390,
+      "height": 454,
+      "confidence": 0.949,
+      "class": "Maggie",
+      "class_id": 0,
+      "detection_id": "bf52eb0c-9aa3-459d-9460-e59ffcc7c3c6"
+    },
+    {
+      "x": 337,
+      "y": 302,
+      "width": 390,
+      "height": 454,
+      "confidence": 0.949,
+      "class": "Maggie",
+      "class_id": 0,
+      "detection_id": "bf52eb0c-9aa3-459d-9460-e59ffcc7c3c6"
+    },
+    {
+      "x": 337,
+      "y": 302,
+      "width": 390,
+      "height": 454,
+      "confidence": 0.949,
+      "class": "Kurkure",
       "class_id": 0,
       "detection_id": "bf52eb0c-9aa3-459d-9460-e59ffcc7c3c6"
     },

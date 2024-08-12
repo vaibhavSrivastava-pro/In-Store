@@ -6,7 +6,7 @@ const TalkToYourProduct = () => {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [generatingAnswer, setGeneratingAnswer] = useState(false);
-  const [imageSrc, setImageSrc] = useState(null);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [productData, setProductData] = useState("Oreo");
   const videoRef = useRef(null);
 
@@ -16,17 +16,19 @@ const TalkToYourProduct = () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play();
+          (videoRef.current as HTMLVideoElement).srcObject = stream;
+          (videoRef.current as HTMLVideoElement).play();
         }
 
         setTimeout(async () => {
           const canvas = document.createElement("canvas");
           if (videoRef.current) {
-            canvas.width = videoRef.current.videoWidth;
-            canvas.height = videoRef.current.videoHeight;
+            canvas.width = (videoRef.current as HTMLVideoElement).videoWidth;
+            canvas.height = (videoRef.current as HTMLVideoElement).videoHeight;
             const context = canvas.getContext("2d");
-            context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+            if (context) {
+              context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+            }
             const image = canvas.toDataURL("image/png");
             setImageSrc(image);
 
@@ -51,8 +53,8 @@ const TalkToYourProduct = () => {
               setAnswer(
                 response.data.candidates[0].content.parts[0].text
               );
-            } catch (error) {
-              console.error("Error:", error.response ? error.response.data : error.message);
+            } catch (error: any) {
+              console.error("Error:", ((error as any).response ? (error as any).response.data : (error as any).message) as any);
               setAnswer("Sorry - Something went wrong. Please try again!");
             }
             setGeneratingAnswer(false);
@@ -66,7 +68,7 @@ const TalkToYourProduct = () => {
     openCameraAndTakePicture();
   }, []);
 
-  async function generateAnswer(e) {
+  async function generateAnswer(e: React.FormEvent<HTMLFormElement>) {
     setGeneratingAnswer(true);
     e.preventDefault();
     setAnswer("Loading your answer... \n It might take up to 10 seconds");
@@ -85,7 +87,7 @@ const TalkToYourProduct = () => {
         response.data.candidates[0].content.parts[0].text
       );
     } catch (error) {
-      console.error("Error:", error.response ? error.response.data : error.message);
+      console.error("Error:", ((error as any).response ? (error as any).response.data : (error as any).message) as any);
       setAnswer("Sorry - Something went wrong. Please try again!");
     }  
     setGeneratingAnswer(false);
