@@ -7,11 +7,11 @@ import Billing from "./pages/Billing";
 
 export default function App() {
   return (
-    <main className="bg-black min-h-screen overflow-hidden">
+    <main>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/TalkToYourProduct" element={<TalkToYourProduct />} />
-        <Route path="/Compare" element={<CompareProducts />} />
+        <Route path="/CompareProducts" element={<CompareProducts />} />
         <Route path="/Billing" element={<Billing />} />
       </Routes>
     </main>

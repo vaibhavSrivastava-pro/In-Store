@@ -1,9 +1,7 @@
-import { ThreeDCardDemo } from "../components/ui/3DCard"
-
 
 const Billing = () => {
     return (
-            <ThreeDCardDemo title="Billing" brief="Want the bill without waiting in the line! Get your bill ready by just taking ONE picture" button="Click the bill" />
+        <h1 className="bg-blue-50 text-black text-7xl">Billing</h1>
     )
 }
 
