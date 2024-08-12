@@ -2,7 +2,7 @@ import SparklesPreview from "../components/ui/Title"
 
 const Navbar = () => {
     return (
-            <SparklesPreview value="InStore" />
+        <SparklesPreview value="InStore" />
     )
 }
 
