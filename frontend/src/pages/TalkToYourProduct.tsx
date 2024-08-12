@@ -10,7 +10,8 @@ const TalkToYourProduct = () => {
   const [productData, setProductData] = useState("Oreo");
   const videoRef = useRef(null);
 
-const initialPrompt = `Describe ${productData} in 20 words refering it as you`
+  const initialPrompt = `Describe ${productData} in 20 words refering it as you`
+
 
   useEffect(() => {
     const openCameraAndTakePicture = async () => {
