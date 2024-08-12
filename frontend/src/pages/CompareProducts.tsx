@@ -1,4 +1,4 @@
-import { ThreeDCardDemo } from "./ui/3DCard"
+import { ThreeDCardDemo } from "../components/ui/3DCard"
 
 const CompareProducts = () => {
     return (

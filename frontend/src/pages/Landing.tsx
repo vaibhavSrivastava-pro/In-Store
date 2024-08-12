@@ -1,7 +1,7 @@
-import TalkToYourProduct from "../components/TalkToYourProduct";
-import CompareProducts from "../components/CompareProducts";
-import Billing from "../components/Billing";
-import Navbar from "../components/Navbar";
+import TalkToYourProduct from "./TalkToYourProduct";
+import CompareProducts from "./CompareProducts";
+import Billing from "./Billing";
+import Navbar from "./Navbar";
 import { ThreeDCardDemo } from "../components/ui/3DCard";
 
 export default function LandingPage() {

@@ -1,4 +1,4 @@
-import SparklesPreview from "./ui/Title"
+import SparklesPreview from "../components/ui/Title"
 
 const Navbar = () => {
     return (
