@@ -11,7 +11,6 @@ const TalkToYourProduct = () => {
   const videoRef = useRef(null);
 
   const initialPrompt = `Describe ${productData} in 20 words refering it as you`
-
   useEffect(() => {
     const openCameraAndTakePicture = async () => {
       try {
@@ -81,16 +80,14 @@ const TalkToYourProduct = () => {
         data: {
           contents: [{ parts: [{ text: question }] }],
         },
-      });
-
+      });  
       setAnswer(
         response.data.candidates[0].content.parts[0].text
       );
     } catch (error) {
       console.error("Error:", error.response ? error.response.data : error.message);
       setAnswer("Sorry - Something went wrong. Please try again!");
-    }
-
+    }  
     setGeneratingAnswer(false);
   }
 
