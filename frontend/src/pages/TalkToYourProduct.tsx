@@ -1,90 +1,98 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, FormEvent } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 
-const classMap = {
+interface ProductData {
+  price: number;
+  quantity: number;
+  ingredients: string;
+  manufacture_date: string;
+  expiry_date: string;
+  nutritional_information: string;
+}
+
+const classMap: Record<string, ProductData> = {
   "Lifebuoy Soap": {
-    "price": 30.00,
-    "quantity": 50,
-    "ingredients": "Sodium Palmate,Sodium Palm Kernelate,Aqua,Glycerin,Fragrance,Sodium Chloride,Citric Acid",
-    "manufacture_date": "2024-01-15",
-    "expiry_date": "2025-01-15",
-    "nutritional_information": "None"
+    price: 30.00,
+    quantity: 50,
+    ingredients: "Sodium Palmate,Sodium Palm Kernelate,Aqua,Glycerin,Fragrance,Sodium Chloride,Citric Acid",
+    manufacture_date: "2024-01-15",
+    expiry_date: "2025-01-15",
+    nutritional_information: "None"
   },
   "Dettol Handwash": {
-    "price": 70.00,
-    "quantity": 100,
-    "ingredients": "Aqua, Sodium Laureth Sulfate, Glycerin,Cocamidopropyl Betaine,Sodium Chloride,Fragrance, Chloroxylenol",
-    "manufacture_date": "2024-03-10",
-    "expiry_date": "2026-03-10",
-    "nutritional_information": "None"
+    price: 70.00,
+    quantity: 100,
+    ingredients: "Aqua, Sodium Laureth Sulfate, Glycerin,Cocamidopropyl Betaine,Sodium Chloride,Fragrance, Chloroxylenol",
+    manufacture_date: "2024-03-10",
+    expiry_date: "2026-03-10",
+    nutritional_information: "None"
   },
   "Kurkure": {
-    "price": 20.00,
-    "quantity": 100,
-    "ingridients": "Cornmeal, Edible Vegetable Oil, Spices & Condiments, Sugar, Salt, Acidity Regulators,Flavor Enhancers,Antioxidants",
-    "manufacture_date": "2024-03-2",
-    "expiry_date": "2025-01-15",
-    "nutritional_information": "energy - 523 kcal, protein - 6.7 g, carbohydrates 60 g, sugar - 2.4 g, fat - 28.6 g"
+    price: 20.00,
+    quantity: 100,
+    ingredients: "Cornmeal, Edible Vegetable Oil, Spices & Condiments, Sugar, Salt, Acidity Regulators,Flavor Enhancers,Antioxidants",
+    manufacture_date: "2024-03-2",
+    expiry_date: "2025-01-15",
+    nutritional_information: "energy - 523 kcal, protein - 6.7 g, carbohydrates 60 g, sugar - 2.4 g, fat - 28.6 g"
   },
   "Ariel": {
-    "price": 100.00,
-    "quantity": 10,
-    "ingredients": "Surfactants,Enzymes,Sodium Carbonate,Bleaching Agents,Optical Brighteners,Fragrance",
-    "manufacture_date": "2024-03-2",
-    "expiry_date": "2025-01-15",
-    "nutritional_information": "None"
+    price: 100.00,
+    quantity: 10,
+    ingredients: "Surfactants,Enzymes,Sodium Carbonate,Bleaching Agents,Optical Brighteners,Fragrance",
+    manufacture_date: "2024-03-2",
+    expiry_date: "2025-01-15",
+    nutritional_information: "None"
   },
   "Fanta": {
-    "price": 20.00,
-    "quantity": 100,
-    "ingredients": "Carbonated Water, Sugar, Citric Acid, Natural Flavors, Sodium Benzoate, Food Color (Sunset Yellow FCF)",
-    "manufacture_date": "2024-03-2",
-    "expiry_date": "2025-01-15",
-    "nutritional_information": "energy - 44 kcal, protein - 0 g, carbohydrates - 11 g,  sugar - 11 g, fat - 0 g"
+    price: 20.00,
+    quantity: 100,
+    ingredients: "Carbonated Water, Sugar, Citric Acid, Natural Flavors, Sodium Benzoate, Food Color (Sunset Yellow FCF)",
+    manufacture_date: "2024-03-2",
+    expiry_date: "2025-01-15",
+    nutritional_information: "energy - 44 kcal, protein - 0 g, carbohydrates - 11 g,  sugar - 11 g, fat - 0 g"
   },
   "Colgate": {
-    "price": 20.00,
-    "quantity": 100,
-    "ingredients":"Sorbitol, Water,Silica, Sodium Lauryl Sulfate, Sodium Fluoride, Flavor, Sodium Saccharin",
-    "manufacture_date": "2024-03-2",
-    "expiry_date": "2025-01-15",
-    "nutritional_information": "None"
+    price: 20.00,
+    quantity: 100,
+    ingredients: "Sorbitol, Water,Silica, Sodium Lauryl Sulfate, Sodium Fluoride, Flavor, Sodium Saccharin",
+    manufacture_date: "2024-03-2",
+    expiry_date: "2025-01-15",
+    nutritional_information: "None"
   }
 }
 
-const loadImageBase64 = (file) => {
+const loadImageBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
+    reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
   });
 };
 
 const TalkToYourProduct = () => {
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
-  const [generatingAnswer, setGeneratingAnswer] = useState(false);
-  const [imageSrc, setImageSrc] = useState(null);
-  // const [productData, setProductData] = useState(null);
-  const [preprocessedPrompt, setPreprocessedPrompt] = useState("")
-  const videoRef = useRef(null);
+  const [question, setQuestion] = useState<string>("");
+  const [answer, setAnswer] = useState<string>("");
+  const [generatingAnswer, setGeneratingAnswer] = useState<boolean>(false);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [preprocessedPrompt, setPreprocessedPrompt] = useState<string>("");
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const openCameraAndTakePicture = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         if (videoRef.current) {
-          (videoRef.current as HTMLVideoElement).srcObject = stream;
-          (videoRef.current as HTMLVideoElement).play();
+          videoRef.current.srcObject = stream;
+          videoRef.current.play();
         }
 
         setTimeout(async () => {
           const canvas = document.createElement("canvas");
           if (videoRef.current) {
-            canvas.width = (videoRef.current as HTMLVideoElement).videoWidth;
-            canvas.height = (videoRef.current as HTMLVideoElement).videoHeight;
+            canvas.width = videoRef.current.videoWidth;
+            canvas.height = videoRef.current.videoHeight;
             const context = canvas.getContext("2d");
             if (context) {
               context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
@@ -109,17 +117,14 @@ const TalkToYourProduct = () => {
                 }
               });
               console.log(response.data);
-              // setProductData(response.data); // Store the result in productData
               
               // Access the class of the first prediction
               const firstPredictionClass = response.data.predictions[0].class;
               console.log(`The class of the first prediction is: ${firstPredictionClass}`);
               const productData = JSON.stringify(classMap[firstPredictionClass]);
-              
 
               // Update the initial prompt with the detected class
               const initialPrompt = `Talk like a good assistant, give every response in not more than 40 words. Start with basic info about ${firstPredictionClass}`;
-              // const preprocessedPrompt = `I will ask you a question regarding ${firstPredictionClass} and take context from ${productData}. Answer the question - `;
               setPreprocessedPrompt(`I will ask you a question regarding the grocery product(Note - It is a grocery product) ${firstPredictionClass} and take context from ${productData}. Answer the question - `)
 
               // Initial API call after capturing the image
@@ -158,7 +163,7 @@ const TalkToYourProduct = () => {
     openCameraAndTakePicture();
   }, []);
 
-  async function generateAnswer(e: React.FormEvent<HTMLFormElement>) {
+  async function generateAnswer(e: FormEvent<HTMLFormElement>) {
     setGeneratingAnswer(true);
     e.preventDefault();
     setAnswer("Loading your answer... \n It might take up to 10 seconds");
