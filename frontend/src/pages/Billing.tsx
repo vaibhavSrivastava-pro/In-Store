@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 
 interface ItemInfo {
     price: number;
+    quantity: number;
     ingredients: string;
-    "nutritional information": string;
-    "manufacturing information": string;
+    manufacture_date: string;
+    expiry_date: string;
+    nutritional_information: string;
 }
 
 interface Prediction {
@@ -19,99 +22,112 @@ interface Prediction {
 }
 
 const infoMap: Record<string, ItemInfo> = {
-    Ariel: {
-        price: 40,
-        ingredients: "niubibiyb",
-        "nutritional information": "hbjhbjhbhjb",
-        "manufacturing information": "jjbiuiub",
-    },
-    Kurkure: {
-        price: 20,
-        ingredients: "niubibiyb",
-        "nutritional information": "hbjhbjhbhjb",
-        "manufacturing information": "jjbiuiub",
-    },
-    Maggie: {
-        price: 30,
-        ingredients: "niubibiyb",
-        "nutritional information": "hbjhbjhbhjb",
-        "manufacturing information": "jjbiuiub",
-    },
+    "Lifebuoy Soap": {
+    price: 30.00,
+    quantity: 50,
+    ingredients: "Sodium Palmate,Sodium Palm Kernelate,Aqua,Glycerin,Fragrance,Sodium Chloride,Citric Acid",
+    manufacture_date: "2024-01-15",
+    expiry_date: "2025-01-15",
+    nutritional_information: "None"
+  },
+  "Dettol Handwash": {
+    price: 70.00,
+    quantity: 100,
+    ingredients: "Aqua, Sodium Laureth Sulfate, Glycerin,Cocamidopropyl Betaine,Sodium Chloride,Fragrance, Chloroxylenol",
+    manufacture_date: "2024-03-10",
+    expiry_date: "2026-03-10",
+    nutritional_information: "None"
+  },
+  "Kurkure": {
+    price: 20.00,
+    quantity: 100,
+    ingredients: "Cornmeal, Edible Vegetable Oil, Spices & Condiments, Sugar, Salt, Acidity Regulators,Flavor Enhancers,Antioxidants",
+    manufacture_date: "2024-03-2",
+    expiry_date: "2025-01-15",
+    nutritional_information: "energy - 523 kcal, protein - 6.7 g, carbohydrates 60 g, sugar - 2.4 g, fat - 28.6 g"
+  },
+  "Ariel": {
+    price: 100.00,
+    quantity: 10,
+    ingredients: "Surfactants,Enzymes,Sodium Carbonate,Bleaching Agents,Optical Brighteners,Fragrance",
+    manufacture_date: "2024-03-2",
+    expiry_date: "2025-01-15",
+    nutritional_information: "None"
+  },
+  "Fanta": {
+    price: 20.00,
+    quantity: 100,
+    ingredients: "Carbonated Water, Sugar, Citric Acid, Natural Flavors, Sodium Benzoate, Food Color (Sunset Yellow FCF)",
+    manufacture_date: "2024-03-2",
+    expiry_date: "2025-01-15",
+    nutritional_information: "energy - 44 kcal, protein - 0 g, carbohydrates - 11 g,  sugar - 11 g, fat - 0 g"
+  },
+  "Colgate": {
+    price: 20.00,
+    quantity: 100,
+    ingredients: "Sorbitol, Water,Silica, Sodium Lauryl Sulfate, Sodium Fluoride, Flavor, Sodium Saccharin",
+    manufacture_date: "2024-03-2",
+    expiry_date: "2025-01-15",
+    nutritional_information: "None"
+  }
 };
 
 const Billing = () => {
-    const [predictions, setPredictions] = useState<Prediction[]>([
-        {
-            x: 337,
-            y: 302,
-            width: 390,
-            height: 454,
-            confidence: 0.949,
-            class: "Ariel",
-            class_id: 0,
-            detection_id: "bf52eb0c-9aa3-459d-9460-e59ffcc7c3c6",
-        },
-        {
-            x: 337,
-            y: 302,
-            width: 390,
-            height: 454,
-            confidence: 0.949,
-            class: "Ariel",
-            class_id: 0,
-            detection_id: "bf52eb0c-9aa3-459d-9460-e59ffcc7c3c6",
-        },
-        {
-            x: 337,
-            y: 302,
-            width: 390,
-            height: 454,
-            confidence: 0.949,
-            class: "Maggie",
-            class_id: 0,
-            detection_id: "bf52eb0c-9aa3-459d-9460-e59ffcc7c3c6",
-        },
-        {
-            x: 337,
-            y: 302,
-            width: 390,
-            height: 454,
-            confidence: 0.949,
-            class: "Maggie",
-            class_id: 0,
-            detection_id: "bf52eb0c-9aa3-459d-9460-e59ffcc7c3c6",
-        },
-        {
-            x: 337,
-            y: 302,
-            width: 390,
-            height: 454,
-            confidence: 0.949,
-            class: "Maggie",
-            class_id: 0,
-            detection_id: "bf52eb0c-9aa3-459d-9460-e59ffcc7c3c6",
-        },
-        {
-            x: 337,
-            y: 302,
-            width: 390,
-            height: 454,
-            confidence: 0.949,
-            class: "Kurkure",
-            class_id: 0,
-            detection_id: "bf52eb0c-9aa3-459d-9460-e59ffcc7c3c6",
-        },
-        {
-            x: 337,
-            y: 302,
-            width: 390,
-            height: 454,
-            confidence: 0.949,
-            class: "Kurkure",
-            class_id: 0,
-            detection_id: "bf52eb0c-9aa3-459d-9460-e59ffcc7c3c6",
-        },
-    ]);
+    const [predictions, setPredictions] = useState<Prediction[]>([]);
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    useEffect(() => {
+        const openCameraAndTakePicture = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                if (videoRef.current) {
+                    videoRef.current.srcObject = stream;
+                    videoRef.current.play();
+                }
+
+                setTimeout(async () => {
+                    const canvas = document.createElement("canvas");
+                    if (videoRef.current) {
+                        canvas.width = videoRef.current.videoWidth;
+                        canvas.height = videoRef.current.videoHeight;
+                        const context = canvas.getContext("2d");
+                        if (context) {
+                            context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+                        }
+                        const image = canvas.toDataURL("image/png");
+
+                        // Stop all video tracks immediately after capturing the image
+                        stream.getTracks().forEach(track => track.stop());
+
+                        // API call to detect product data
+                        try {
+                            const response = await axios({
+                                method: "POST",
+                                url: "https://detect.roboflow.com/shop_stock_dataset/1",
+                                params: {
+                                    api_key: "6uxC2XiBBuYzgBfNyulF"
+                                },
+                                data: image,
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                }
+                            });
+                            console.log("Res", response)
+
+                            // Update predictions state with the response data
+                            setPredictions(response.data.predictions);
+                        } catch (error) {
+                            console.error("Error:", error.message);
+                        }
+                    }
+                }, 4000);
+            } catch (error) {
+                console.error("Error accessing camera:", error);
+            }
+        };
+
+        openCameraAndTakePicture();
+    }, []);
 
     const calculateTotal = () => {
         let total = 0;
@@ -135,13 +151,13 @@ const Billing = () => {
             <div className="w-1/2 flex items-center justify-center bg-gray-100">
                 <div>
                     <h2 className="text-xl font-bold mb-4">Upload Image</h2>
-                    <input type="file" className="mb-4" />
+                    <video ref={videoRef} className="mb-4"></video>
                     <div className="border border-gray-300 p-4">
                         <p>Predicted Items:</p>
                         <ul>
                             {predictions.map((prediction, index) => (
                                 <li key={index}>
-                                    {prediction.class} (Confidence: {prediction.confidence})
+                                    {prediction.class}
                                 </li>
                             ))}
                         </ul>
