@@ -6,38 +6,50 @@ const classMap = {
   "Lifebuoy Soap": {
     "price": 30.00,
     "quantity": 50,
+    "ingredients": "Sodium Palmate,Sodium Palm Kernelate,Aqua,Glycerin,Fragrance,Sodium Chloride,Citric Acid",
     "manufacture_date": "2024-01-15",
-    "expiry_date": "2025-01-15"
+    "expiry_date": "2025-01-15",
+    "nutritional_information": "None"
   },
   "Dettol Handwash": {
     "price": 70.00,
     "quantity": 100,
+    "ingredients": "Aqua, Sodium Laureth Sulfate, Glycerin,Cocamidopropyl Betaine,Sodium Chloride,Fragrance, Chloroxylenol",
     "manufacture_date": "2024-03-10",
-    "expiry_date": "2026-03-10"
+    "expiry_date": "2026-03-10",
+    "nutritional_information": "None"
   },
   "Kurkure": {
     "price": 20.00,
     "quantity": 100,
+    "ingridients": "Cornmeal, Edible Vegetable Oil, Spices & Condiments, Sugar, Salt, Acidity Regulators,Flavor Enhancers,Antioxidants",
     "manufacture_date": "2024-03-2",
-    "expiry_date": "2025-01-15"
+    "expiry_date": "2025-01-15",
+    "nutritional_information": "energy - 523 kcal, protein - 6.7 g, carbohydrates 60 g, sugar - 2.4 g, fat - 28.6 g"
   },
   "Ariel": {
     "price": 100.00,
     "quantity": 10,
+    "ingredients": "Surfactants,Enzymes,Sodium Carbonate,Bleaching Agents,Optical Brighteners,Fragrance",
     "manufacture_date": "2024-03-2",
-    "expiry_date": "2025-01-15"
+    "expiry_date": "2025-01-15",
+    "nutritional_information": "None"
   },
   "Fanta": {
     "price": 20.00,
     "quantity": 100,
+    "ingredients": "Carbonated Water, Sugar, Citric Acid, Natural Flavors, Sodium Benzoate, Food Color (Sunset Yellow FCF)",
     "manufacture_date": "2024-03-2",
-    "expiry_date": "2025-01-15"
+    "expiry_date": "2025-01-15",
+    "nutritional_information": "energy - 44 kcal, protein - 0 g, carbohydrates - 11 g,  sugar - 11 g, fat - 0 g"
   },
   "Colgate": {
     "price": 20.00,
     "quantity": 100,
+    "ingredients":"Sorbitol, Water,Silica, Sodium Lauryl Sulfate, Sodium Fluoride, Flavor, Sodium Saccharin",
     "manufacture_date": "2024-03-2",
-    "expiry_date": "2025-01-15"
+    "expiry_date": "2025-01-15",
+    "nutritional_information": "None"
   }
 }
 
