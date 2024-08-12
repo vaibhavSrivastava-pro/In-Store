@@ -2,15 +2,63 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 
+const classMap = {
+  "Lifebuoy Soap": {
+    "price": 30.00,
+    "quantity": 50,
+    "manufacture_date": "2024-01-15",
+    "expiry_date": "2025-01-15"
+  },
+  "Dettol Handwash": {
+    "price": 70.00,
+    "quantity": 100,
+    "manufacture_date": "2024-03-10",
+    "expiry_date": "2026-03-10"
+  },
+  "Kurkure": {
+    "price": 20.00,
+    "quantity": 100,
+    "manufacture_date": "2024-03-2",
+    "expiry_date": "2025-01-15"
+  },
+  "Ariel": {
+    "price": 100.00,
+    "quantity": 10,
+    "manufacture_date": "2024-03-2",
+    "expiry_date": "2025-01-15"
+  },
+  "Fanta": {
+    "price": 20.00,
+    "quantity": 100,
+    "manufacture_date": "2024-03-2",
+    "expiry_date": "2025-01-15"
+  },
+  "Colgate": {
+    "price": 20.00,
+    "quantity": 100,
+    "manufacture_date": "2024-03-2",
+    "expiry_date": "2025-01-15"
+  }
+}
+
+const loadImageBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+};
+
 const TalkToYourProduct = () => {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [generatingAnswer, setGeneratingAnswer] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
-  const [productData, setProductData] = useState("Oreo");
+  // const [productData, setProductData] = useState(null);
+  const [preprocessedPrompt, setPreprocessedPrompt] = useState("")
   const videoRef = useRef(null);
 
-  const initialPrompt = `Describe ${productData} in 20 words refering it as you`
   useEffect(() => {
     const openCameraAndTakePicture = async () => {
       try {
@@ -32,30 +80,60 @@ const TalkToYourProduct = () => {
 
             // Stop all video tracks immediately after capturing the image
             stream.getTracks().forEach(track => track.stop());
-            // Taking response from CNN model and storing it in productData
-            // Initial API call after capturing the image
-            setGeneratingAnswer(true);
-            setAnswer("Loading your answer... \n It might take up to 10 seconds");
+
+            // New API call to detect product data
             try {
               const response = await axios({
-                url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBh0pgV-O6iO-FPYCH7hjDwIzKYBepk4Z8`,
-                method: "post",
+                method: "POST",
+                url: "https://detect.roboflow.com/shop_stock_dataset/1",
+                params: {
+                  api_key: "6uxC2XiBBuYzgBfNyulF"
+                },
+                data: image,
                 headers: {
-                  'Content-Type': 'application/json',
-                },
-                data: {
-                  contents: [{ parts: [{ text: initialPrompt }] }],
-                },
+                  "Content-Type": "application/x-www-form-urlencoded"
+                }
               });
+              console.log(response.data);
+              // setProductData(response.data); // Store the result in productData
+              
+              // Access the class of the first prediction
+              const firstPredictionClass = response.data.predictions[0].class;
+              console.log(`The class of the first prediction is: ${firstPredictionClass}`);
+              const productData = JSON.stringify(classMap[firstPredictionClass]);
+              
 
-              setAnswer(
-                response.data.candidates[0].content.parts[0].text
-              );
+              // Update the initial prompt with the detected class
+              const initialPrompt = `Talk like a good assistant, give every response in not more than 40 words. Start with basic info about ${firstPredictionClass}`;
+              // const preprocessedPrompt = `I will ask you a question regarding ${firstPredictionClass} and take context from ${productData}. Answer the question - `;
+              setPreprocessedPrompt(`I will ask you a question regarding the grocery product(Note - It is a grocery product) ${firstPredictionClass} and take context from ${productData}. Answer the question - `)
+
+              // Initial API call after capturing the image
+              setGeneratingAnswer(true);
+              setAnswer("Loading your answer... \n It might take up to 10 seconds");
+              try {
+                const response = await axios({
+                  url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBh0pgV-O6iO-FPYCH7hjDwIzKYBepk4Z8`,
+                  method: "post",
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  data: {
+                    contents: [{ parts: [{ text: initialPrompt }] }],
+                  },
+                });
+
+                setAnswer(
+                  response.data.candidates[0].content.parts[0].text
+                );
+              } catch (error) {
+                console.error("Error:", error.response ? error.response.data : error.message);
+                setAnswer("Sorry - Something went wrong. Please try again!");
+              }
+              setGeneratingAnswer(false);
             } catch (error) {
-              console.error("Error:", error.response ? error.response.data : error.message);
-              setAnswer("Sorry - Something went wrong. Please try again!");
+              console.error("Error:", error.message);
             }
-            setGeneratingAnswer(false);
           }
         }, 4000);
       } catch (error) {
@@ -71,6 +149,8 @@ const TalkToYourProduct = () => {
     e.preventDefault();
     setAnswer("Loading your answer... \n It might take up to 10 seconds");
     try {
+      const concatenatedPrompt = preprocessedPrompt + question;
+      console.log("PP", concatenatedPrompt)
       const response = await axios({
         url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBh0pgV-O6iO-FPYCH7hjDwIzKYBepk4Z8`, // Ensure the API key and URL are correct
         method: "post",
@@ -78,7 +158,7 @@ const TalkToYourProduct = () => {
           'Content-Type': 'application/json',
         },
         data: {
-          contents: [{ parts: [{ text: question }] }],
+          contents: [{ parts: [{ text: concatenatedPrompt }] }],
         },
       });  
       setAnswer(

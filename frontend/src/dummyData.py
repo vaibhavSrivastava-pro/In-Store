@@ -58,3 +58,18 @@ mp = {
     }
   ]
 }
+
+
+
+
+
+# curl -X POST "https://detect.roboflow.com/shop_stock_dataset/1?\ api_key=rf_QWt5W4vbn7fJMo7MuBOyrsbwsnh2&\image=https://m.media-amazon.com/images/I/71GN9iowhxL._AC_UF1000,1000_QL80_.jpg
+
+# /Users/vaibhavsrivastava/Desktop/kurkure.jpg
+
+# base64 /Users/vaibhavsrivastava/Desktop/kurkure.jpg | curl -d @- \
+# "https://detect.roboflow.com/shop_stock_dataset/1?api_key=rf_QWt5W4vbn7fJMo7MuBOyrsbwsnh"
+
+
+
+
