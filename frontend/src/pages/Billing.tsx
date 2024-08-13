@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import Button from "../components/ui/Button";
 
 interface ItemInfo {
     price: number;
@@ -146,17 +147,17 @@ const Billing = () => {
     }, {} as Record<string, number>);
 
     return (
-        <div className="flex h-screen">
+        <div className="flex flex-col lg:flex-row h-screen bg-gray-900 text-white">
             {/* Left side - Image input */}
-            <div className="w-1/2 flex items-center justify-center bg-gray-100">
-                <div>
+            <div className="lg:w-1/2 flex items-center justify-center bg-gray-800 p-6">
+                <div className="w-full">
                     <h2 className="text-xl font-bold mb-4">Upload Image</h2>
-                    <video ref={videoRef} className="mb-4"></video>
-                    <div className="border border-gray-300 p-4">
-                        <p>Predicted Items:</p>
+                    <video ref={videoRef} className="mb-4 w-full h-auto"></video>
+                    <div className="border border-gray-700 p-4 rounded-lg">
+                        <p className="font-semibold">Predicted Items:</p>
                         <ul>
                             {predictions.map((prediction, index) => (
-                                <li key={index}>
+                                <li key={index} className="py-1">
                                     {prediction.class}
                                 </li>
                             ))}
@@ -166,7 +167,7 @@ const Billing = () => {
             </div>
 
             {/* Right side - Billing summary */}
-            <div className="w-1/2 p-8 bg-white">
+            <div className="lg:w-1/2 p-8 bg-gray-900 text-white">
                 <h1 className="text-4xl font-bold mb-8">Billing Summary</h1>
                 <div className="space-y-4">
                     {Object.keys(itemCountMap).map((itemClass) => (
@@ -180,13 +181,11 @@ const Billing = () => {
                         </div>
                     ))}
                 </div>
-                <div className="border-t border-gray-300 mt-8 pt-4 flex justify-between text-2xl font-bold">
+                <div className="border-t border-gray-700 mt-8 mb-4 pt-4 flex justify-between text-2xl font-bold">
                     <span>Total</span>
                     <span>₹{calculateTotal()}</span>
                 </div>
-                <button className="mt-8 w-full bg-blue-500 text-white py-3 rounded-lg text-2xl">
-                    Pay Now
-                </button>
+                <Button value="Pay Now" link="/PayNow" />
             </div>
         </div>
     );
