@@ -146,12 +146,12 @@ const TalkToYourProduct = () => {
                   response.data.candidates[0].content.parts[0].text
                 );
               } catch (error) {
-                console.error("Error:", error.response ? error.response.data : error.message);
+                console.error("Error:", ((error as any).response ? (error as any).response.data : (error as any).message) as any);
                 setAnswer("Sorry - Something went wrong. Please try again!");
               }
               setGeneratingAnswer(false);
             } catch (error) {
-              console.error("Error:", error.message);
+              console.error("Error:", (error as any).message);
             }
           }
         }, 4000);
