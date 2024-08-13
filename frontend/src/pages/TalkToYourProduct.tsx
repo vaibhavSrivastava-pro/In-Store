@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, FormEvent } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
+import Button from "../components/ui/Button";
 
 interface ProductData {
   price: number;
@@ -117,7 +118,7 @@ const TalkToYourProduct = () => {
                 }
               });
               console.log(response.data);
-              
+
               // Access the class of the first prediction
               const firstPredictionClass = response.data.predictions[0].class;
               console.log(`The class of the first prediction is: ${firstPredictionClass}`);
@@ -146,12 +147,12 @@ const TalkToYourProduct = () => {
                   response.data.candidates[0].content.parts[0].text
                 );
               } catch (error) {
-                console.error("Error:", ((error as any).response ? (error as any).response.data : (error as any).message) as any);
+                console.error("Error:", (error as any).response ? (error as any).response.data : (error as any).message);
                 setAnswer("Sorry - Something went wrong. Please try again!");
               }
               setGeneratingAnswer(false);
-            } catch (error) {
-              console.error("Error:", (error as any).message);
+            } catch (error: any) {
+              console.error("Error:", error.message);
             }
           }
         }, 4000);
@@ -179,50 +180,50 @@ const TalkToYourProduct = () => {
         data: {
           contents: [{ parts: [{ text: concatenatedPrompt }] }],
         },
-      });  
+      });
       setAnswer(
         response.data.candidates[0].content.parts[0].text
       );
     } catch (error) {
       console.error("Error:", ((error as any).response ? (error as any).response.data : (error as any).message) as any);
       setAnswer("Sorry - Something went wrong. Please try again!");
-    }  
+    }
     setGeneratingAnswer(false);
   }
 
   return (
     <>
-      <div className="h-screen p-3 flex flex-col justify-center items-center">
+      <div className="min-h-screen p-3 flex flex-col justify-center items-center bg-gray-900 text-white">
         {imageSrc ? (
-          <div className="w-full md:w-2/5 lg:w-1/4 xl:w-1/5 text-center rounded-lg bg-white my-4 shadow-lg transition-all duration-500 transform hover:scale-105">
-            <img src={imageSrc} alt="Captured" className="p-4" />
+          <div className="w-full md:w-2/5 lg:w-1/4 xl:w-1/5 text-center rounded-lg bg-gray-800 my-4 shadow-lg transition-all duration-500 transform hover:scale-105">
+            <img src={imageSrc} alt="Captured" className="p-4 rounded-md" />
           </div>
         ) : (
-          <video ref={videoRef} className="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 text-center rounded-lg bg-white my-4 shadow-lg transition-all duration-500 transform hover:scale-105"></video>
+          <video
+            ref={videoRef}
+            className="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 text-center rounded-lg bg-gray-800 my-4 shadow-lg transition-all duration-500 transform hover:scale-105"
+          ></video>
         )}
-        <div className="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 text-center rounded-lg bg-white my-4 shadow-lg transition-all duration-500 transform hover:scale-105">
-          <ReactMarkdown className="p-4">{answer}</ReactMarkdown>
+        <div className="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 text-center rounded-lg bg-gray-800 my-4 shadow-lg transition-all duration-500 transform hover:scale-105 overflow-hidden">
+          <ReactMarkdown className="p-4 max-h-96 overflow-y-auto">{answer}</ReactMarkdown>
         </div>
         <form
           onSubmit={generateAnswer}
-          className="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 text-center rounded-lg shadow-lg bg-white py-6 px-4 transition-all duration-500 transform hover:scale-105"
+          className="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 text-center rounded-lg shadow-lg bg-gray-800 py-6 px-4 transition-all duration-500 transform hover:scale-105"
         >
-          <h1 className="text-4xl font-bold text-blue-500 mb-4 animate-bounce">Chat AI</h1>
+          <h1 className="text-4xl font-bold text-blue-400 mb-4">Chat AI</h1>
           <textarea
             required
-            className="border border-gray-300 rounded w-full my-2 min-h-fit p-3 transition-all duration-300 focus:border-blue-400 focus:shadow-lg"
+            className="border border-gray-600 rounded w-full my-2 p-3 min-h-[100px] transition-all duration-300 bg-gray-900 text-white focus:border-blue-400 focus:shadow-lg"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             placeholder="Ask anything"
           ></textarea>
-          <button
-            type="submit"
-            className={`bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition-all duration-300 ${generatingAnswer ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-            disabled={generatingAnswer}
-          >
-            Generate answer
-          </button>
+          <Button 
+            value="Generate answer" 
+            onClick={generateAnswer} 
+            disabled={generatingAnswer} 
+          />
         </form>
       </div>
     </>
