@@ -12,6 +12,14 @@ interface OrderItem {
     thumbnail: string;
     price: number;
 }
+interface Address {
+    name: string;
+    street: string;
+    city: string;
+    state: string;
+    pinCode: string;
+    phone: string;
+}
 
 interface Order {
     id: number;
