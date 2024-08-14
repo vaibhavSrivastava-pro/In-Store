@@ -74,6 +74,7 @@ const CompareProducts = () => {
     const [class1Response, setClass1Response] = useState("");
     const [class2Response, setClass2Response] = useState("");
     const [showCompareTable, setShowCompareTable] = useState(false);
+    const [loading, setLoading] = useState(false); // Loader state
 
     const startWebcam = async () => {
         try {
@@ -109,7 +110,8 @@ const CompareProducts = () => {
                 setImageSrc(image);
                 setCaptured(true);
                 stopWebcam();
-    
+                setLoading(true); // Show loader
+
                 // API call to detect product data
                 try {
                     const response = await axios({
@@ -123,17 +125,19 @@ const CompareProducts = () => {
                             "Content-Type": "application/x-www-form-urlencoded"
                         }
                     });
-    
+
                     const detectedClass = response.data.predictions[0].class;
                     console.log(`Detected class: ${detectedClass}`);
                     setClass(detectedClass);
                 } catch (error) {
                     console.error("Error:", error.message);
+                } finally {
+                    setLoading(false); // Hide loader
                 }
             }
         }
     };
-    
+
     const generateProsAndCons = async (productClass: string, setResponse: React.Dispatch<React.SetStateAction<string>>) => {
         const productInfo = classMap[productClass] ? JSON.stringify(classMap[productClass]) : "No information available";
         const prompt = `Give pros and cons of ${productClass} and take context from ${productInfo}. Use the given context and the data you have to give the required info. Give pros and cons no matter what. Dont tell me any other thing apart from the pros and cons. Give the response in not more than 150 words`;
@@ -149,7 +153,7 @@ const CompareProducts = () => {
                     contents: [{ parts: [{ text: prompt }] }],
                 },
             });
-    
+
             setResponse(response.data.candidates[0].content.parts[0].text);
         } catch (error) {
             console.error("Error:", (error as any).response ? (error as any).response.data : (error as any).message);
@@ -240,6 +244,12 @@ const CompareProducts = () => {
                             </button>
                         )}
                     </div>
+
+                    {loading && (
+                        <div className="flex justify-center pt-7">
+                            <p className="text-white text-2xl">Loading...</p>
+                        </div>
+                    )}
 
                     {isProduct1Captured && isProduct2Captured && (
                         <div className="flex justify-center pt-7">

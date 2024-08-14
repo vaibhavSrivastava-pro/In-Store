@@ -125,7 +125,7 @@ const TalkToYourProduct = () => {
               const productData = JSON.stringify(classMap[firstPredictionClass]);
 
               // Update the initial prompt with the detected class
-              const initialPrompt = `Talk like a good assistant, give every response in not more than 40 words. Start with basic info about ${firstPredictionClass}`;
+              const initialPrompt = `Talk like a good assistant, give every response in not more than 40 words. Start with basic info about the grocery product(Note - It is a grocery product) - ${firstPredictionClass}`;
               setPreprocessedPrompt(`I will ask you a question regarding the grocery product(Note - It is a grocery product) ${firstPredictionClass} and take context from ${productData}. Answer the question - `)
 
               // Initial API call after capturing the image
