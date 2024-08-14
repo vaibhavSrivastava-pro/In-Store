@@ -75,6 +75,7 @@ const infoMap: Record<string, ItemInfo> = {
 
 const Billing = () => {
     const [predictions, setPredictions] = useState<Prediction[]>([]);
+    const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
@@ -96,6 +97,7 @@ const Billing = () => {
                             context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
                         }
                         const image = canvas.toDataURL("image/png");
+                        setCapturedImage(image); // Set the captured image
 
                         // Stop all video tracks immediately after capturing the image
                         stream.getTracks().forEach(track => track.stop());
@@ -114,7 +116,6 @@ const Billing = () => {
                                 }
                             });
                             console.log("Res", response)
-
                             // Update predictions state with the response data
                             setPredictions(response.data.predictions);
                         } catch (error: any) {
@@ -152,7 +153,11 @@ const Billing = () => {
             <div className="lg:w-1/2 flex items-center justify-center bg-gray-800 p-6">
                 <div className="w-full">
                     <h2 className="text-xl font-bold mb-4">Upload Image</h2>
-                    <video ref={videoRef} className="mb-4 w-full h-auto"></video>
+                    {capturedImage ? (
+                        <img src={capturedImage} alt="Captured" className="mb-4 w-full h-auto" />
+                    ) : (
+                        <video ref={videoRef} className="mb-4 w-full h-auto"></video>
+                    )}
                     <div className="border border-gray-700 p-4 rounded-lg">
                         <p className="font-semibold">Predicted Items:</p>
                         <ul>
