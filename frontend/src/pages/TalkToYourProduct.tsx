@@ -100,7 +100,7 @@ const TalkToYourProduct = () => {
               context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
             }
             const image = canvas.toDataURL("image/png");
-            setImageSrc(image);
+            setImageSrc(image)
 
             // Stop all video tracks immediately after capturing the image
             stream.getTracks().forEach(track => track.stop());
@@ -111,7 +111,7 @@ const TalkToYourProduct = () => {
                 method: "POST",
                 url: "https://detect.roboflow.com/shop_stock_dataset/1",
                 params: {
-                  api_key: "6uxC2XiBBuYzgBfNyulF"
+                  api_key: import.meta.env.VITE_ROBOFLOW_API_KEY
                 },
                 data: image,
                 headers: {
@@ -119,7 +119,6 @@ const TalkToYourProduct = () => {
                 }
               });
               console.log(response.data);
-
               // Access the class of the first prediction
               const firstPredictionClass = response.data.predictions[0].class;
               console.log(`The class of the first prediction is: ${firstPredictionClass}`);
@@ -134,7 +133,7 @@ const TalkToYourProduct = () => {
               setAnswer("Loading your answer... \n It might take up to 10 seconds");
               try {
                 const response = await axios({
-                  url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBh0pgV-O6iO-FPYCH7hjDwIzKYBepk4Z8`,
+                  url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`,
                   method: "post",
                   headers: {
                     'Content-Type': 'application/json',
@@ -222,7 +221,7 @@ const TalkToYourProduct = () => {
           ></textarea>
           <Button 
             value="Generate answer" 
-            onClick={generateAnswer} 
+            // onClick={generateAnswer} 
             disabled={generatingAnswer} 
           />
         </form>

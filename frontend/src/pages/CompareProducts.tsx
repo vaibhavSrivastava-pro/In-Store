@@ -138,7 +138,7 @@ const CompareProducts: React.FC = () => {
                         method: "POST",
                         url: "https://detect.roboflow.com/shop_stock_dataset/1",
                         params: {
-                            api_key: "6uxC2XiBBuYzgBfNyulF",
+                            api_key: import.meta.env.VITE_ROBOFLOW_API_KEY,
                         },
                         data: image,
                         headers: {
@@ -150,7 +150,7 @@ const CompareProducts: React.FC = () => {
                     console.log(`Detected class: ${detectedClass}`);
                     setClass(detectedClass);
                 } catch (error) {
-                    console.error("Error:", error.message);
+                    console.error("Error:", (error as any)?.message);
                 } finally {
                     setLoading(false); // Hide loader
                 }
@@ -171,7 +171,7 @@ const CompareProducts: React.FC = () => {
         );
         try {
             const response = await axios({
-                url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBh0pgV-O6iO-FPYCH7hjDwIzKYBepk4Z8`,
+                url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`,
                 method: "post",
                 headers: {
                     "Content-Type": "application/json",
@@ -201,7 +201,7 @@ const CompareProducts: React.FC = () => {
                         <div className="text-center">
                             <p className="text-white text-2xl mb-2 font-bold">Product 1</p>
                             <img
-                                src={imageSrc1}
+                                src={imageSrc1 || ""}
                                 alt="Captured Product 1"
                                 className="w-64 h-64 rounded-lg object-cover border-4 border-blue-500"
                             />
@@ -209,7 +209,7 @@ const CompareProducts: React.FC = () => {
                         <div className="text-center">
                             <p className="text-white text-2xl mb-2 font-bold">Product 2</p>
                             <img
-                                src={imageSrc2}
+                                src={imageSrc2 || ""}
                                 alt="Captured Product 2"
                                 className="w-64 h-64 rounded-lg object-cover border-4 border-blue-500"
                             />
