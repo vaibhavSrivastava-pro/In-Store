@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, FormEvent } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import Button from "../components/ui/Button";
+import SparklesPreview from "../components/ui/Title";
 
 interface ProductData {
   price: number;
@@ -192,8 +193,8 @@ const TalkToYourProduct = () => {
   }
 
   return (
-    <>
-      <div className="min-h-screen p-3 flex flex-col justify-center items-center bg-gray-900 text-white">
+    <div className="min-h-screen p-3 flex flex-col justify-center items-center bg-black text-white">
+      <SparklesPreview value="Talk To Your Product" />
         {imageSrc ? (
           <div className="w-full md:w-2/5 lg:w-1/4 xl:w-1/5 text-center rounded-lg bg-gray-800 my-4 shadow-lg transition-all duration-500 transform hover:scale-105">
             <img src={imageSrc} alt="Captured" className="p-4 rounded-md" />
@@ -211,7 +212,7 @@ const TalkToYourProduct = () => {
           onSubmit={generateAnswer}
           className="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 text-center rounded-lg shadow-lg bg-gray-800 py-6 px-4 transition-all duration-500 transform hover:scale-105"
         >
-          <h1 className="text-4xl font-bold text-blue-400 mb-4">Chat AI</h1>
+          {/* <h1 className="text-4xl font-bold text-blue-400 mb-4">Chat AI</h1>       */}
           <textarea
             required
             className="border border-gray-600 rounded w-full my-2 p-3 min-h-[100px] transition-all duration-300 bg-gray-900 text-white focus:border-blue-400 focus:shadow-lg"
@@ -225,8 +226,7 @@ const TalkToYourProduct = () => {
             disabled={generatingAnswer} 
           />
         </form>
-      </div>
-    </>
+    </div>
   )
 }
 
