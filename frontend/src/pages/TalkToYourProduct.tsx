@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef, FormEvent } from "react";
+import { useState, useEffect, useRef, FormEvent, lazy, Suspense } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
-import Button from "../components/ui/Button";
-import SparklesPreview from "../components/ui/Title";
+const Button = lazy(() => import("../components/ui/Button"));
+const SparklesPreview = lazy(() => import("../components/ui/Title"));
 
 interface ProductData {
   price: number;
