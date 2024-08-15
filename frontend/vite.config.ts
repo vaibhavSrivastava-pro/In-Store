@@ -7,10 +7,17 @@ export default defineConfig({
   build: {
     sourcemap: true,
     outDir: 'dist',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+        },
+      },
+    },
   },
   resolve: {
     alias: {
       '@': '/src',
     },
   },
-})
+});
