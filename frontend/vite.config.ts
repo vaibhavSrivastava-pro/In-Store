@@ -4,6 +4,7 @@ import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/', // Ensure this is correct
   plugins: [react()],
   build: {
     sourcemap: true,
