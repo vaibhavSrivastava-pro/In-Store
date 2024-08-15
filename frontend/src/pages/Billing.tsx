@@ -148,9 +148,9 @@ const Billing = () => {
     }, {} as Record<string, number>);
 
     return (
-        <div className="flex flex-col lg:flex-row h-screen bg-gray-900 text-white">
+        <div className="flex flex-col lg:flex-row h-screen bg-black text-white">
             {/* Left side - Image input */}
-            <div className="lg:w-1/2 flex items-center justify-center bg-gray-800 p-6">
+            <div className="lg:w-1/2 flex items-center justify-center bgblack p-6">
                 <div className="w-full">
                     <h2 className="text-xl font-bold mb-4">Upload Image</h2>
                     {capturedImage ? (

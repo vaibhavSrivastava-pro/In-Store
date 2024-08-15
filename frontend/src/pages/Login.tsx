@@ -8,14 +8,18 @@ import {
     IconBrandGoogle,
     IconBrandOnlyfans,
 } from "@tabler/icons-react";
-
+import { useNavigate } from "react-router-dom";
 
 type Props = {}
 
 const Login = (props: Props) => {
+    const navigate = useNavigate();
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("Form submitted");
+
+        navigate("/");
     };
     return (
         <div className="flex justify-center items-center flex-col h-screen max-w-2xl w-full mx-auto rounded-none md:rounded-2xl p-8 md:p-16 shadow-input bg-white dark:bg-black">
